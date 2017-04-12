@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{855D0B2C-8321-42A0-AFF3-38A706BE79E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{DD694F62-C71A-425E-8890-A7FB705571B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mh.MongoRepository", "src\Repository\Mh.MongoRepository\Mh.MongoRepository.csproj", "{CF063CCB-D586-40CF-BC3E-137DB5D6405D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mh.Entries", "src\Repository\Mh.Entries\Mh.Entries.csproj", "{36E69B0B-0FBB-49C2-95E9-8FC2A9E0F7CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF063CCB-D586-40CF-BC3E-137DB5D6405D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF063CCB-D586-40CF-BC3E-137DB5D6405D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF063CCB-D586-40CF-BC3E-137DB5D6405D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF063CCB-D586-40CF-BC3E-137DB5D6405D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36E69B0B-0FBB-49C2-95E9-8FC2A9E0F7CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36E69B0B-0FBB-49C2-95E9-8FC2A9E0F7CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36E69B0B-0FBB-49C2-95E9-8FC2A9E0F7CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36E69B0B-0FBB-49C2-95E9-8FC2A9E0F7CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DD694F62-C71A-425E-8890-A7FB705571B7} = {855D0B2C-8321-42A0-AFF3-38A706BE79E5}
+		{CF063CCB-D586-40CF-BC3E-137DB5D6405D} = {DD694F62-C71A-425E-8890-A7FB705571B7}
+		{36E69B0B-0FBB-49C2-95E9-8FC2A9E0F7CB} = {DD694F62-C71A-425E-8890-A7FB705571B7}
+	EndGlobalSection
+EndGlobal

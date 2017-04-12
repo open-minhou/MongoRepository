@@ -1,0 +1,6 @@
+E:\Git代码\MongoRepository\src\Repository\Mh.Entries\bin\Debug\netcoreapp1.1\Mh.Entries.deps.json
+E:\Git代码\MongoRepository\src\Repository\Mh.Entries\bin\Debug\netcoreapp1.1\Mh.Entries.dll
+E:\Git代码\MongoRepository\src\Repository\Mh.Entries\bin\Debug\netcoreapp1.1\Mh.Entries.pdb
+E:\Git代码\MongoRepository\src\Repository\Mh.Entries\obj\Debug\netcoreapp1.1\Mh.Entries.AssemblyInfo.cs
+E:\Git代码\MongoRepository\src\Repository\Mh.Entries\obj\Debug\netcoreapp1.1\Mh.Entries.dll
+E:\Git代码\MongoRepository\src\Repository\Mh.Entries\obj\Debug\netcoreapp1.1\Mh.Entries.pdb
