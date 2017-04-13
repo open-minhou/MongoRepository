@@ -9,3 +9,14 @@ D:\TestCode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\ne
 D:\TestCode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.Entries.pdb
 D:\TestCode\MongoRepository\test\Mh.MongoRepository.TestInstructure\obj\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.csprojResolveAssemblyReference.cache
 D:\TestCode\MongoRepository\test\Mh.MongoRepository.TestInstructure\obj\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.AssemblyInfo.cs
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.deps.json
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.dll
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.pdb
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.Entries.dll
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.MongoRepository.dll
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.Entries.pdb
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\bin\Debug\netcoreapp1.1\Mh.MongoRepository.pdb
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\obj\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.csprojResolveAssemblyReference.cache
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\obj\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.AssemblyInfo.cs
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\obj\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.dll
+E:\gitcode\MongoRepository\test\Mh.MongoRepository.TestInstructure\obj\Debug\netcoreapp1.1\Mh.MongoRepository.TestInstructure.pdb

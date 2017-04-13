@@ -2408,7 +2408,7 @@
       ]
     },
     "Microsoft.DiaSymReader.Native/1.4.1": {
-      "sha512": "Qvt0/nG9z2knBBv6uKPtLjN2zhLk8gULoy9tsLyw+tz0NX0qRwnfycZbGe9iS+qQ/KZoXA7qH3pKh/QlyyKByg==",
+      "sha512": "oi9LCkKzSm7WgI0LsODDQUQdzldNdv9BU/QDoW9QMu+uN4baJXANkTWrjc2+aTqeftyhPXF1fn/m9jPo7mJ6FA==",
       "type": "package",
       "path": "microsoft.diasymreader.native/1.4.1",
       "files": [
@@ -2424,7 +2424,7 @@
       ]
     },
     "Microsoft.NETCore.App/1.1.1": {
-      "sha512": "lU6IOYnq/xvnupbecU7c9iiu/d2y4BnVGGpyqB1tqmbTmqtCJ/JoIyWCp17arJKhZcQeNAZ9kw31X8e66ZXF/g==",
+      "sha512": "VmbeuJr3rHBRssZp3tR48mzWPzt4syJNXRKq/hfAmUbdSu03cR1HrMcmDAC1L00bs7l/PkDxbo/+v3X65JT+MA==",
       "type": "package",
       "path": "microsoft.netcore.app/1.1.1",
       "files": [
@@ -2472,7 +2472,7 @@
       ]
     },
     "Microsoft.NETCore.Jit/1.1.1": {
-      "sha512": "7buzx8WXN522yZ6oYVJ2fLQ4xVgvr3V+upUzHn2+1MlH7RXfanuUBi9rJyVc3Sd1dRAohWpPDsSEsErtIIXNJw==",
+      "sha512": "TiG1ZTlStqkcrZzSIkyhbAr8PvTKzJQMS2awfzfU3wQd4oIxZr2Ausrf8ksHOfQC2EKgZd66r9tHsqASDWwKsg==",
       "type": "package",
       "path": "microsoft.netcore.jit/1.1.1",
       "files": [
@@ -2497,7 +2497,7 @@
       ]
     },
     "Microsoft.NETCore.Runtime.CoreCLR/1.1.1": {
-      "sha512": "WPtXKd/Se52w8j4WcG8t5RvTYNJ07AhnsxQyupjQvsWbbHXv1+6tQEUvo8w/vhgiH+WNlEo0zv9WIoEixSrBQw==",
+      "sha512": "uCLPGXIFJ49eIhwmBpuVQWQKzddeNYxmJpa0jjM6O5mJCeCN7Anz4aIT2nOxSh0U/mti1SR7f4elLnsU2j/bfQ==",
       "type": "package",
       "path": "microsoft.netcore.runtime.coreclr/1.1.1",
       "files": [
@@ -7075,15 +7075,15 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\MallCooApp4\\.nuget\\packages\\": {}
+    "C:\\Users\\mh\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\TestCode\\MongoRepository\\src\\Repository\\Mh.Entries\\Mh.Entries.csproj",
+      "projectUniqueName": "E:\\gitcode\\MongoRepository\\src\\Repository\\Mh.Entries\\Mh.Entries.csproj",
       "projectName": "Mh.Entries",
-      "projectPath": "D:\\TestCode\\MongoRepository\\src\\Repository\\Mh.Entries\\Mh.Entries.csproj",
-      "outputPath": "D:\\TestCode\\MongoRepository\\src\\Repository\\Mh.Entries\\obj\\",
+      "projectPath": "E:\\gitcode\\MongoRepository\\src\\Repository\\Mh.Entries\\Mh.Entries.csproj",
+      "outputPath": "E:\\gitcode\\MongoRepository\\src\\Repository\\Mh.Entries\\obj\\",
       "projectStyle": "PackageReference",
       "originalTargetFrameworks": [
         "netcoreapp1.1"

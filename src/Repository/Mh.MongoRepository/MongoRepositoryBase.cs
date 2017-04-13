@@ -17,7 +17,7 @@ namespace Mh.MongoRepository
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TKey">实体主键类型</typeparam>
-    public class MongoRepositoryBase<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
+    public class MongoRepositoryBase<TEntity, TKey> where TEntity : class, IEntity<TKey>, new() 
     {
         /// <summary>
         /// 数据库名称
@@ -317,8 +317,24 @@ namespace Mh.MongoRepository
             }
             return IAsyncCursorSourceExtensions.ToListAsync(fluent2);
         }
-
-        public Task<List<TProjection>> Aggregate<TProjection>(Expression<Func<TEntity, bool>> filterExp, ProjectionDefinition<TEntity, TProjection> group, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, ReadPreference readPreference = null)
+        public List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter, Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, ReadPreference readPreference = null)
+        {
+            if (filter == null)
+            {
+                filter = Filter.Empty;
+            }
+            IAggregateFluent<TResult> fluent2 = IAggregateFluentExtensions.Group(CreateAggregate(filter, CreateSortDefinition(sortExp, sortType), readPreference), id, group);
+            if (skip > 0)
+            {
+                fluent2 = fluent2.Skip(skip);
+            }
+            if (limit > 0)
+            {
+                fluent2 = fluent2.Limit(limit);
+            }
+            return IAsyncCursorSourceExtensions.ToList(fluent2);
+        }
+        public List<TResult> Aggregate<TResult, TID>(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = null;
             if (filterExp != null)
@@ -329,181 +345,140 @@ namespace Mh.MongoRepository
             {
                 filter = Filter.Empty;
             }
-            return this.Aggregate<TProjection>(filter, group, sortExp, sortType, limit, skip, readPreference);
-        }
-        public List<TResult> Aggregate<TResult, TID>(FilterDefinition<TEntity> filter, Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, ReadPreference readPreference = null)
-        {
-            if (filter == null)
-            {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
-            }
-            IAggregateFluent<TResult> fluent2 = IAggregateFluentExtensions.Group<TEntity, TID, TResult>(base.CreateAggregate(filter, base.CreateSortDefinition<TEntity>(sortExp, sortType), readPreference), id, group);
-            if (skip > 0)
-            {
-                fluent2 = fluent2.Skip(skip);
-            }
-            if (limit > 0)
-            {
-                fluent2 = fluent2.Limit(limit);
-            }
-            return IAsyncCursorSourceExtensions.ToList<TResult>(fluent2, new CancellationToken());
-        }
-        public List<TResult> Aggregate<TResult, TID>(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, TID>> id, Expression<Func<IGrouping<TID, TEntity>, TResult>> group, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, ReadPreference readPreference = null)
-        {
-            FilterDefinition<TEntity> filter = null;
-            if (filterExp != null)
-            {
-                filter = Builders<TEntity>.get_Filter().Where(filterExp);
-            }
-            else
-            {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
-            }
             return this.Aggregate<TResult, TID>(filter, id, group, sortExp, sortType, limit, skip, readPreference);
         }
         public long Count(FilterDefinition<TEntity> filter, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
+                filter = Filter.Empty;
             }
-            CountOptions options = base.CreateCountOptions(limit, skip, hint);
-            return base.GetCollection(readPreference).Count(filter, options, new CancellationToken());
+            CountOptions options = CreateCountOptions(limit, skip, hint);
+            return GetCollection(readPreference).Count(filter, options);
         }
         public long Count(Expression<Func<TEntity, bool>> filterExp, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
-            FilterDefinition<TEntity> filter = null;
-            if (filterExp != null)
-            {
-                filter = Builders<TEntity>.get_Filter().Where(filterExp);
-            }
-            else
-            {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
-            }
+            var filter = GetFIlter(filterExp);
             return this.Count(filter, limit, skip, hint, readPreference);
         }
         public List<TField> Distinct<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
+                filter = Filter.Empty;
             }
-            return IAsyncCursorExtensions.ToList<TField>(base.GetCollection(readPreference).Distinct<TField>(field, filter, null, new CancellationToken()), new CancellationToken());
+            return IAsyncCursorExtensions.ToList(GetCollection(readPreference).Distinct(field, filter, null));
         }
         public List<TField> Distinct<TField>(Expression<Func<TEntity, TField>> fieldExp, FilterDefinition<TEntity> filter, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
+                filter = Filter.Empty;
             }
-            return IAsyncCursorExtensions.ToList<TField>(IMongoCollectionExtensions.Distinct<TEntity, TField>(base.GetCollection(readPreference), fieldExp, filter, null, new CancellationToken()), new CancellationToken());
+            return IAsyncCursorExtensions.ToList<TField>(IMongoCollectionExtensions.Distinct<TEntity, TField>(GetCollection(readPreference), fieldExp, filter, null));
         }
         public List<TField> Distinct<TField>(Expression<Func<TEntity, TField>> fieldExp, Expression<Func<TEntity, bool>> filterExp, ReadPreference readPreference = null)
         {
-            FilterDefinition<TEntity> filter = null;
-            if (filterExp != null)
-            {
-                filter = Builders<TEntity>.get_Filter().Where(filterExp);
-            }
-            else
-            {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
-            }
+            FilterDefinition<TEntity> filter = GetFIlter(filterExp);
             return this.Distinct<TField>(fieldExp, filter, null);
         }
         public bool Exists(FilterDefinition<TEntity> filter, BsonValue hint = null, ReadPreference readPreference = null)
         {
-            ParameterExpression expression;
             if (filter == null)
             {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
+                filter = Filter.Empty;
             }
-            base.CreateCountOptions(1, 0, hint);
-            return (this.Get(filter, MongoBaseRepository<TEntity, TKey>.Projection.Include(Expression.Lambda<Func<TEntity, object>>(Expression.Convert(Expression.Property(expression = Expression.Parameter(typeof(TEntity), "x"), (MethodInfo)methodof(Repository.IEntity.IEntity<TKey>.get_ID, Repository.IEntity.IEntity<TKey>)), typeof(object)), new ParameterExpression[] { expression })), null, hint, readPreference) != null);
+            var option=CreateCountOptions(1, 0, hint);
+            return Count(filter, 1, 0, hint, readPreference) > 0;
         }
         public bool Exists(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null, ReadPreference readPreference = null)
         {
-            FilterDefinition<TEntity> filter = null;
-            if (filterExp != null)
-            {
-                filter = Builders<TEntity>.get_Filter().Where(filterExp);
-            }
-            else
-            {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
-            }
+            FilterDefinition<TEntity> filter = GetFIlter(filterExp);
             return this.Exists(filter, hint, readPreference);
         }
         public TEntity Get(FilterDefinition<TEntity> filter, ProjectionDefinition<TEntity, TEntity> projection = null, SortDefinition<TEntity> sort = null, BsonValue hint = null, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
+                filter = Filter.Empty;
             }
-            FindOptions<TEntity, TEntity> options = base.CreateFindOptions<TEntity>(projection, sort, 1, 0, hint);
-            return IAsyncCursorExtensions.FirstOrDefault<TEntity>(base.GetCollection(readPreference).FindSync<TEntity>(filter, options, new CancellationToken()), new CancellationToken());
+            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sort, 1, 0, hint);
+            return IAsyncCursorExtensions.FirstOrDefault(GetCollection(readPreference).FindSync(filter, options));
         }
-        public TEntity Get(TKey id, Expression<Func<TEntity, object>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        public async Task<TEntity> GetAsync(FilterDefinition<TEntity> filter, ProjectionDefinition<TEntity, TEntity> projection = null, SortDefinition<TEntity> sort = null, BsonValue hint = null, ReadPreference readPreference = null)
         {
-            ParameterExpression expression;
-            FilterDefinition<TEntity> definition = Builders<TEntity>.get_Filter().Eq<TKey>(Expression.Lambda<Func<TEntity, TKey>>(Expression.Property(expression = Expression.Parameter(typeof(TEntity), "x"), (MethodInfo)methodof(Repository.IEntity.IEntity<TKey>.get_ID, Repository.IEntity.IEntity<TKey>)), new ParameterExpression[] { expression }), id);
+            if (filter == null)
+            {
+                filter = Filter.Empty;
+            }
+            FindOptions<TEntity,TEntity> options = CreateFindOptions(projection, sort, 1, 0, hint);
+            return await IAsyncCursorExtensions.FirstOrDefaultAsync(await GetCollection(readPreference).FindAsync(filter, options));
+        }
+        public  Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        {
+            var filter = GetFIlter(filterExp);
             ProjectionDefinition<TEntity, TEntity> projection = null;
             if (includeFieldExp != null)
             {
-                projection = base.IncludeFields<TEntity>(includeFieldExp);
+                projection = IncludeFields(includeFieldExp);
             }
-            FindOptions<TEntity, TEntity> options = base.CreateFindOptions<TEntity>(projection, sortExp, sortType, 1, 0, hint);
-            return IAsyncCursorExtensions.FirstOrDefault<TEntity>(base.GetCollection(readPreference).FindSync<TEntity>(definition, options, new CancellationToken()), new CancellationToken());
+            var sort = CreateSortDefinition(sortExp, sortType);
+            return GetAsync(filter, projection, sort, hint, readPreference);
         }
-        public TEntity Get(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        public Task<TEntity> GetAsync(TKey id, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
-            FilterDefinition<TEntity> definition = null;
+            var filter = Filter.Eq("ID", id);
             ProjectionDefinition<TEntity, TEntity> projection = null;
-            if (filterExp != null)
-            {
-                definition = Builders<TEntity>.get_Filter().Where(filterExp);
-            }
-            else
-            {
-                definition = Builders<TEntity>.get_Filter().get_Empty();
-            }
             if (includeFieldExp != null)
             {
-                projection = base.IncludeFields<TEntity>(includeFieldExp);
+                projection = IncludeFields(includeFieldExp);
             }
-            FindOptions<TEntity, TEntity> options = base.CreateFindOptions<TEntity>(projection, sortExp, sortType, 1, 0, hint);
-            return IAsyncCursorExtensions.FirstOrDefault<TEntity>(base.GetCollection(readPreference).FindSync<TEntity>(definition, options, new CancellationToken()), new CancellationToken());
+            var sort = CreateSortDefinition(sortExp, sortType);
+            return GetAsync(filter, projection, sort, hint, readPreference);
+        }
+        public TEntity Get(TKey id, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        {
+            FilterDefinition<TEntity> definition = Filter.Eq("ID", id);
+            ProjectionDefinition<TEntity, TEntity> projection = null;
+            if (includeFieldExp != null)
+            {
+                projection = IncludeFields(includeFieldExp);
+            }
+            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sortExp, sortType, 1, 0, hint);
+            return IAsyncCursorExtensions.FirstOrDefault<TEntity>(GetCollection(readPreference).FindSync<TEntity>(definition, options));
+        }
+        public TEntity Get(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        {
+            FilterDefinition<TEntity> definition = GetFIlter(filterExp);
+            ProjectionDefinition<TEntity, TEntity> projection = null;
+            if (includeFieldExp != null)
+            {
+                projection = IncludeFields(includeFieldExp);
+            }
+            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sortExp, sortType, 1, 0, hint);
+            return IAsyncCursorExtensions.FirstOrDefault<TEntity>(GetCollection(readPreference).FindSync<TEntity>(definition, options));
         }
         public List<TEntity> GetList(FilterDefinition<TEntity> filter, ProjectionDefinition<TEntity, TEntity> projection = null, SortDefinition<TEntity> sort = null, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
-                filter = Builders<TEntity>.get_Filter().get_Empty();
+                filter = Filter.Empty;
             }
-            FindOptions<TEntity, TEntity> options = base.CreateFindOptions<TEntity>(projection, sort, limit, skip, hint);
-            return IAsyncCursorExtensions.ToList<TEntity>(base.GetCollection(readPreference).FindSync<TEntity>(filter, options, new CancellationToken()), new CancellationToken());
+            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sort, limit, skip, hint);
+            return IAsyncCursorExtensions.ToList<TEntity>(GetCollection(readPreference).FindSync<TEntity>(filter, options));
         }
-        public List<TEntity> GetList(Expression<Func<TEntity, bool>> filterExp = null, Expression<Func<TEntity, object>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        public List<TEntity> GetList(Expression<Func<TEntity, bool>> filterExp = null, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
-            FilterDefinition<TEntity> definition = null;
+            FilterDefinition<TEntity> definition = GetFIlter(filterExp);
             ProjectionDefinition<TEntity, TEntity> projection = null;
             SortDefinition<TEntity> sort = null;
-            if (filterExp != null)
-            {
-                definition = Builders<TEntity>.get_Filter().Where(filterExp);
-            }
-            else
-            {
-                definition = Builders<TEntity>.get_Filter().get_Empty();
-            }
-            sort = base.CreateSortDefinition<TEntity>(sortExp, sortType);
+            sort = CreateSortDefinition(sortExp, sortType);
             if (includeFieldExp != null)
             {
-                projection = base.IncludeFields<TEntity>(includeFieldExp);
+                projection = IncludeFields(includeFieldExp);
             }
-            FindOptions<TEntity, TEntity> options = base.CreateFindOptions<TEntity>(projection, sort, limit, skip, hint);
-            return IAsyncCursorExtensions.ToList<TEntity>(base.GetCollection(readPreference).FindSync<TEntity>(definition, options, new CancellationToken()), new CancellationToken());
+            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sort, limit, skip, hint);
+            return IAsyncCursorExtensions.ToList<TEntity>(GetCollection(readPreference).FindSync<TEntity>(definition, options));
         }
 
         async Task<long> GetIncID(int count = 1)
@@ -542,9 +517,9 @@ namespace Mh.MongoRepository
             }
             return options;
         }
-        public FindOptions<TEntity, object> CreateFindOptions(ProjectionDefinition<TEntity, object> projection = null, SortDefinition<TEntity> sort = null, int limit = 0, int skip = 0, BsonValue hint = null)
+        public FindOptions<TEntity, TEntity> CreateFindOptions(ProjectionDefinition<TEntity, TEntity> projection = null, SortDefinition<TEntity> sort = null, int limit = 0, int skip = 0, BsonValue hint = null)
         {
-            FindOptions<TEntity, object> options = new FindOptions<TEntity, object>();
+            FindOptions<TEntity, TEntity> options = new FindOptions<TEntity, TEntity>();
             if (limit > 0)
             {
                 options.Limit = limit;
@@ -569,7 +544,7 @@ namespace Mh.MongoRepository
             }
             return options;
         }
-        public FindOptions<TEntity, object> CreateFindOptions(ProjectionDefinition<TEntity, object> projection = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, BsonValue hint = null)
+        public FindOptions<TEntity, TEntity> CreateFindOptions(ProjectionDefinition<TEntity, TEntity> projection = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, BsonValue hint = null)
         {
             SortDefinition<TEntity> sort = CreateSortDefinition(sortExp, sortType);
             return CreateFindOptions(projection, sort, limit, skip, hint);
@@ -587,7 +562,7 @@ namespace Mh.MongoRepository
             }
             return Sort.Descending(sortExp);
         }
-        public ProjectionDefinition<TEntity> IncludeFields(Expression<Func<TEntity, object>> fieldsExp)
+        public ProjectionDefinition<TEntity> IncludeFields(Expression<Func<TEntity, TEntity>> fieldsExp)
         {
             if (fieldsExp == null)
             {
@@ -604,6 +579,20 @@ namespace Mh.MongoRepository
                 list.Add(Projection.Include((FieldDefinition<TEntity>)info.Name));
             }
             return Projection.Combine(list);
+        }
+
+        FilterDefinition<TEntity> GetFIlter(Expression<Func<TEntity, bool>> filterExp)
+        {
+            FilterDefinition<TEntity> filter = null;
+            if (filterExp != null)
+            {
+                filter = Filter.Where(filterExp);
+            }
+            else
+            {
+                filter = Filter.Empty;
+            }
+            return filter;
         }
 
     }

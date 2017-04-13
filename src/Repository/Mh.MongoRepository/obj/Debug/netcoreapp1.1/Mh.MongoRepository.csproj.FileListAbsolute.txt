@@ -19,3 +19,12 @@ D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcorea
 D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.MongoRepository.pdb
 D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.Entries.dll
 D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.Entries.pdb
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.MongoRepository.deps.json
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.csprojResolveAssemblyReference.cache
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.AssemblyInfo.cs
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.dll
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.pdb
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.MongoRepository.dll
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.MongoRepository.pdb
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.Entries.dll
+E:\gitcode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.Entries.pdb
