@@ -15,3 +15,7 @@ D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcorea
 D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.AssemblyInfo.cs
 D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.dll
 D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.pdb
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.MongoRepository.dll
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.MongoRepository.pdb
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.Entries.dll
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.Entries.pdb
