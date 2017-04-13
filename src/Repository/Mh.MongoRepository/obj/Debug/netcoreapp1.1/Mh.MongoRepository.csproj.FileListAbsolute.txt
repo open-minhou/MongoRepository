@@ -10,3 +10,8 @@ E:\Git代码\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcore
 E:\Git代码\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.Entries.pdb
 E:\Git代码\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.dll
 E:\Git代码\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.pdb
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\bin\Debug\netcoreapp1.1\Mh.MongoRepository.deps.json
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.csprojResolveAssemblyReference.cache
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.AssemblyInfo.cs
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.dll
+D:\TestCode\MongoRepository\src\Repository\Mh.MongoRepository\obj\Debug\netcoreapp1.1\Mh.MongoRepository.pdb

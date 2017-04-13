@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mh.Entries
 {
-    public interface IAutoInr<TKey>:IEntity<TKey>
+    public interface IAutoInc:IEntity<long>
     {
     }
 }
