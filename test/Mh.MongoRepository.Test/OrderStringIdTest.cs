@@ -19,6 +19,9 @@ namespace Mh.MongoRepository.Test
         public async Task InsertAndGetTest()
         {
             await _repository.InsertAsync(_order);
+            var result = await _repository.GetAsync(_order.ID);
+            Assert.AreEqual(_order.ID, result.ID);
+            Assert.AreEqual(_order.Name, result.Name);
         }
     }
 }
