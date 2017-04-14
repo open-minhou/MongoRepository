@@ -60,7 +60,7 @@ namespace Mh.MongoRepository
             UpdateDefinition<TEntity> updater;
             BsonDocument bsDoc = BsonExtensionMethods.ToBsonDocument(updateEntity);
             bsDoc.Remove("_id");
-            updater = new BsonDocumentUpdateDefinition<TEntity>(bsDoc);
+            updater = new BsonDocument("$set",bsDoc);
             if (isUpsert && updateEntity is IAutoInc)
             {
                 long id = await GetIncID();
@@ -107,9 +107,10 @@ namespace Mh.MongoRepository
         public Task<TEntity> FindOneAndDeleteAsync(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = SortType.Ascending, WriteConcern writeConcern = null)
         {
 
-            var options = new FindOneAndDeleteOptions<TEntity>()
+            var options = new FindOneAndDeleteOptions<TEntity>();
+            if(sortExp!=null)
             {
-                Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp),
+                options.Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp);
             };
             return GetCollection(writeConcern).FindOneAndDeleteAsync(filterExp, options);
         }
@@ -128,9 +129,12 @@ namespace Mh.MongoRepository
         {
             var options = new FindOneAndReplaceOptions<TEntity, TEntity>()
             {
-                Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp),
                 IsUpsert = isUpsert
             };
+            if (sortExp != null)
+            {
+                options.Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp);
+            }
             return GetCollection(writeConcern).FindOneAndReplaceAsync(filterExp, entity, options);
         }
 
@@ -138,8 +142,8 @@ namespace Mh.MongoRepository
         {
             var options = new FindOneAndUpdateOptions<TEntity, TEntity>()
             {
-                Sort = sort,// sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp),
-                IsUpsert = isUpsert
+                Sort = sort,
+                IsUpsert = isUpsert,
             };
             return GetCollection(writeConcern).FindOneAndUpdateAsync(filter, update, options);
         }
@@ -149,7 +153,7 @@ namespace Mh.MongoRepository
         {
             var options = new FindOneAndUpdateOptions<TEntity, TEntity>()
             {
-                Sort = sort,// sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp),
+                Sort = sort,
                 IsUpsert = isUpsert
             };
             var update = await CreateUpdateDefinitionAsync(updateEntity);
@@ -160,7 +164,7 @@ namespace Mh.MongoRepository
         {
             var options = new FindOneAndUpdateOptions<TEntity, TEntity>()
             {
-                Sort = sort,// sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp),
+                Sort = sort,
                 IsUpsert = isUpsert
             };
             return GetCollection(writeConcern).FindOneAndUpdateAsync(filterExp, updateExp(Updater), options);
@@ -170,9 +174,12 @@ namespace Mh.MongoRepository
         {
             var options = new FindOneAndUpdateOptions<TEntity, TEntity>()
             {
-                Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp),
                 IsUpsert = isUpsert
             };
+            if (sortExp != null)
+            {
+                options.Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp);
+            }
             return GetCollection(writeConcern).FindOneAndUpdateAsync(filterExp, update, options);
         }
 
@@ -180,9 +187,12 @@ namespace Mh.MongoRepository
         {
             var options = new FindOneAndUpdateOptions<TEntity, TEntity>()
             {
-                Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp),
                 IsUpsert = isUpsert
             };
+            if (sortExp != null)
+            {
+                options.Sort = sortType == SortType.Ascending ? Sort.Ascending(sortExp) : Sort.Descending(sortExp);
+            }
             var update = await CreateUpdateDefinitionAsync(updateEntity);
             return await GetCollection(writeConcern).FindOneAndUpdateAsync(filterExp, update, options);
         }
@@ -200,7 +210,7 @@ namespace Mh.MongoRepository
 
         public async Task InsertBatchAsync(IEnumerable<TEntity> entitys, WriteConcern writeConcern = null)
         {
-            if (!(typeof(TEntity) is IAutoInc))
+            if (!(typeof(IAutoInc).IsAssignableFrom(typeof(TEntity))))
             {
                 await GetCollection(writeConcern).InsertManyAsync(entitys);
                 return;
@@ -214,7 +224,7 @@ namespace Mh.MongoRepository
                 {
                     incEntity.ID = id - count + 1;
                     list.Add((TEntity)incEntity);
-                    id--;
+                    id++;
                 }
             }
             if (list.Count > 0)
@@ -347,19 +357,19 @@ namespace Mh.MongoRepository
             }
             return this.Aggregate<TResult, TID>(filter, id, group, sortExp, sortType, limit, skip, readPreference);
         }
-        public long Count(FilterDefinition<TEntity> filter, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        public Task<long> CountAsync(FilterDefinition<TEntity> filter, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
                 filter = Filter.Empty;
             }
             CountOptions options = CreateCountOptions(limit, skip, hint);
-            return GetCollection(readPreference).Count(filter, options);
+            return GetCollection(readPreference).CountAsync(filter, options);
         }
-        public long Count(Expression<Func<TEntity, bool>> filterExp, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        public Task<long> CountAsync(Expression<Func<TEntity, bool>> filterExp, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
             var filter = GetFIlter(filterExp);
-            return this.Count(filter, limit, skip, hint, readPreference);
+            return CountAsync(filter, limit, skip, hint, readPreference);
         }
         public List<TField> Distinct<TField>(FieldDefinition<TEntity, TField> field, FilterDefinition<TEntity> filter, ReadPreference readPreference = null)
         {
@@ -382,19 +392,19 @@ namespace Mh.MongoRepository
             FilterDefinition<TEntity> filter = GetFIlter(filterExp);
             return this.Distinct<TField>(fieldExp, filter, null);
         }
-        public bool Exists(FilterDefinition<TEntity> filter, BsonValue hint = null, ReadPreference readPreference = null)
+        public async Task<bool> ExistsAsync(FilterDefinition<TEntity> filter, BsonValue hint = null, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
                 filter = Filter.Empty;
             }
             var option=CreateCountOptions(1, 0, hint);
-            return Count(filter, 1, 0, hint, readPreference) > 0;
+            return  await CountAsync(filter, 1, 0, hint, readPreference) > 0;
         }
-        public bool Exists(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null, ReadPreference readPreference = null)
+        public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filterExp, BsonValue hint = null, ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> filter = GetFIlter(filterExp);
-            return this.Exists(filter, hint, readPreference);
+            return this.ExistsAsync(filter, hint, readPreference);
         }
         public TEntity Get(FilterDefinition<TEntity> filter, ProjectionDefinition<TEntity, TEntity> projection = null, SortDefinition<TEntity> sort = null, BsonValue hint = null, ReadPreference readPreference = null)
         {
@@ -436,38 +446,16 @@ namespace Mh.MongoRepository
             var sort = CreateSortDefinition(sortExp, sortType);
             return GetAsync(filter, projection, sort, hint, readPreference);
         }
-        public TEntity Get(TKey id, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
-        {
-            FilterDefinition<TEntity> definition = Filter.Eq("ID", id);
-            ProjectionDefinition<TEntity, TEntity> projection = null;
-            if (includeFieldExp != null)
-            {
-                projection = IncludeFields(includeFieldExp);
-            }
-            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sortExp, sortType, 1, 0, hint);
-            return IAsyncCursorExtensions.FirstOrDefault<TEntity>(GetCollection(readPreference).FindSync<TEntity>(definition, options));
-        }
-        public TEntity Get(Expression<Func<TEntity, bool>> filterExp, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, BsonValue hint = null, ReadPreference readPreference = null)
-        {
-            FilterDefinition<TEntity> definition = GetFIlter(filterExp);
-            ProjectionDefinition<TEntity, TEntity> projection = null;
-            if (includeFieldExp != null)
-            {
-                projection = IncludeFields(includeFieldExp);
-            }
-            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sortExp, sortType, 1, 0, hint);
-            return IAsyncCursorExtensions.FirstOrDefault<TEntity>(GetCollection(readPreference).FindSync<TEntity>(definition, options));
-        }
-        public List<TEntity> GetList(FilterDefinition<TEntity> filter, ProjectionDefinition<TEntity, TEntity> projection = null, SortDefinition<TEntity> sort = null, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
+       public async Task<List<TEntity>> GetListAsync(FilterDefinition<TEntity> filter, ProjectionDefinition<TEntity, TEntity> projection = null, SortDefinition<TEntity> sort = null, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
             if (filter == null)
             {
                 filter = Filter.Empty;
             }
             FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sort, limit, skip, hint);
-            return IAsyncCursorExtensions.ToList<TEntity>(GetCollection(readPreference).FindSync<TEntity>(filter, options));
+            return await IAsyncCursorExtensions.ToListAsync(await GetCollection(readPreference).FindAsync(filter, options));
         }
-        public List<TEntity> GetList(Expression<Func<TEntity, bool>> filterExp = null, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
+        public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filterExp = null, Expression<Func<TEntity, TEntity>> includeFieldExp = null, Expression<Func<TEntity, object>> sortExp = null, SortType sortType = 0, int limit = 0, int skip = 0, BsonValue hint = null, ReadPreference readPreference = null)
         {
             FilterDefinition<TEntity> definition = GetFIlter(filterExp);
             ProjectionDefinition<TEntity, TEntity> projection = null;
@@ -477,8 +465,7 @@ namespace Mh.MongoRepository
             {
                 projection = IncludeFields(includeFieldExp);
             }
-            FindOptions<TEntity, TEntity> options = CreateFindOptions(projection, sort, limit, skip, hint);
-            return IAsyncCursorExtensions.ToList<TEntity>(GetCollection(readPreference).FindSync<TEntity>(definition, options));
+            return GetListAsync(definition, projection, sort, limit, skip, hint, readPreference);
         }
 
         async Task<long> GetIncID(int count = 1)
@@ -487,6 +474,7 @@ namespace Mh.MongoRepository
             var setting = new MongoCollectionSettings { WriteConcern = WriteConcern.Acknowledged };
             var option = new FindOneAndUpdateOptions<Sequence>();
             option.IsUpsert = true;
+            option.ReturnDocument = ReturnDocument.After;
             var filter = new FilterDefinitionBuilder<Sequence>().Eq("ID", _collName);
             var sequence = await _client.GetDatabase(_dbName).GetCollection<Sequence>("_Sequence", setting).FindOneAndUpdateAsync(filter, updater, option);
             return sequence.IncID;

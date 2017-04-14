@@ -7,7 +7,7 @@ namespace Mh.MongoRepository.TestInstructure
 {
     public class OrderRepositoryBase<TEntity, TKey> : MongoRepositoryBase<TEntity, TKey> where TEntity:class ,IEntity<TKey>,new ()
     {
-        public OrderRepositoryBase() : base("mongodb://127.0.0.1", "OrderCenter")
+        public OrderRepositoryBase() : base("mongodb://127.0.0.1:27017", "OrderCenter")
         {
         }
     }

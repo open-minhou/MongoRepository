@@ -4,12 +4,14 @@ using System;
 
 namespace Mh.MongoRepository.TestInstructure
 {
+    [BsonIgnoreExtraElements]
     public class OrderStringId:IEntity<string>
     {
         [BsonId]
         public string ID { get; set; }
         public string Name { get; set; }
     }
+    [BsonIgnoreExtraElements]
     public class OrderObjectId : IEntity<string>
     {
         [BsonId]
@@ -17,6 +19,7 @@ namespace Mh.MongoRepository.TestInstructure
         public string ID { get; set; }
         public string Name { get; set; }
     }
+    [BsonIgnoreExtraElements]
     public class OrderIncId : IAutoInc
     {
         [BsonId]
